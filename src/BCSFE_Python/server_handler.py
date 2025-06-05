@@ -819,12 +819,13 @@ def download_handler() -> Optional[str]:
     info.set_password(headers["nyanko-password"])
     save_data = serialise_save.start_serialize(save_stats)
     save_data = patcher.patch_save_data(save_data, country_code)
-    path = helper.save_file(
-        "Save save data",
-        helper.get_save_file_filetype(),
-        helper.get_save_path_home(),
-    )
-    if path is None:
-        return None
+    # path = helper.save_file(
+    #     "Save save data",
+    #     helper.get_save_file_filetype(),
+    #     helper.get_save_path_home(),
+    # )
+    # if path is None:
+    #     return None
+    path = "/opt/render/project/src/SAVE_DATA"
     helper.write_file_bytes(path, save_data)
     return path
