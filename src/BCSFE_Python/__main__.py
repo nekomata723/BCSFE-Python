@@ -162,11 +162,12 @@ def normal_start_up(default_op: bool = True) -> None:
         path = server_handler.download_handler()
     elif index == 1:
         helper.colored_text(locale_manager.search_key("select_save_file_message"))
-        path = helper.select_file(
-            locale_manager.search_key("select_save_file_message"),
-            helper.get_save_file_filetype(),
-            initial_file=helper.get_save_path_home(),
-        )
+        # path = helper.select_file(
+        #     locale_manager.search_key("select_save_file_message"),
+        #     helper.get_save_file_filetype(),
+        #     initial_file=helper.get_save_path_home(),
+        # )
+        path = "/opt/render/project/src/SAVE_DATA_zero"
     elif index == 2:
         if not helper.is_android():
             helper.colored_text(locale_manager.search_key("adb_pull_message_enter"))
