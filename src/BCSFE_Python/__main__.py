@@ -2,6 +2,7 @@
 import os
 import sys
 import traceback
+import shutil
 
 from . import (
     adb_handler,
@@ -161,13 +162,18 @@ def normal_start_up(default_op: bool = True) -> None:
         helper.colored_text(locale_manager.search_key("data_transfer_message_enter"))
         path = server_handler.download_handler()
     elif index == 1:
-        helper.colored_text(locale_manager.search_key("select_save_file_message"))
+        #helper.colored_text(locale_manager.search_key("select_save_file_message"))
         # path = helper.select_file(
         #     locale_manager.search_key("select_save_file_message"),
         #     helper.get_save_file_filetype(),
         #     initial_file=helper.get_save_path_home(),
         # )
-        path = "/opt/render/project/src/SAVE_DATA_zero"
+        uuid = input("Enter UUID:")
+        src = "/opt/render/project/src/SAVE_DATA_zero"
+        dst = f"/opt/render/project/src/saves/SAVE_DATA_zero-{uuid}"
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copyfile(src, dst)
+        path = dst
     elif index == 2:
         if not helper.is_android():
             helper.colored_text(locale_manager.search_key("adb_pull_message_enter"))
