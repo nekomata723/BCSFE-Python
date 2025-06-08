@@ -800,6 +800,7 @@ def download_handler() -> Optional[str]:
         return None
     game_version = input("Enter current game version (e.g 11.3, 9.6, 10.4.0):")
     game_version = helper.str_to_gv(game_version)
+    uuid = input("Enter UUID:")
     response = download_save(
         country_code, transfer_code, confirmation_code, game_version
     )
@@ -826,6 +827,6 @@ def download_handler() -> Optional[str]:
     # )
     # if path is None:
     #     return None
-    path = "/opt/render/project/src/SAVE_DATA"
+    path = f"/opt/render/project/src/saves/SAVE_DATA-{uuid}"
     helper.write_file_bytes(path, save_data)
     return path
