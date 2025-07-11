@@ -837,11 +837,11 @@ def load_save_file(path: str) -> dict[str, Any]:
     country_code = get_country_code(save_data)
     colored_text(f"Game version: &{country_code}&")
     save_stats = parse_save.start_parse(save_data, country_code)
-    if config_manager.get_config_value_category("START_UP", "CREATE_BACKUP"):
-        # write_file_bytes(path + "_backup", save_data)
-        # colored_text(
-        #     f"Backup created at: &{os.path.abspath(path + '_backup')}&", new=GREEN
-        # )
+    # if config_manager.get_config_value_category("START_UP", "CREATE_BACKUP"):
+    #     write_file_bytes(path + "_backup", save_data)
+    #     colored_text(
+    #         f"Backup created at: &{os.path.abspath(path + '_backup')}&", new=GREEN
+    #     )
     return {
         "save_data": save_data,
         "country_code": country_code,
