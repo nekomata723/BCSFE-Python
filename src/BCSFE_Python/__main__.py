@@ -169,8 +169,8 @@ def normal_start_up(default_op: bool = True) -> None:
         #     initial_file=helper.get_save_path_home(),
         # )
         uuid = input("Enter UUID:")
-        src = "/opt/render/project/src/SAVE_DATA_zero"
-        dst = f"/opt/render/project/src/saves/SAVE_DATA_zero-{uuid}"
+        src = "/home/container/SAVE_DATA_zero"
+        dst = f"/home/container/saves/SAVE_DATA_zero-{uuid}"
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         shutil.copyfile(src, dst)
         path = dst
