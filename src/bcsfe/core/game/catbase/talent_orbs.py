@@ -723,7 +723,7 @@ class SaveOrbs:
             return None
         for orb in save_orbs.orb_info_list.orb_info_list:
             orb_id = orb.raw_orb_info.orb_id
-            save_orbs.orbs[orb_id] = SaveOrb(orb, max_orbs)
+            save_orbs.orbs[orb_id] = SaveOrb(orb, 99)
         save_orbs.save(save_file)
         print()
         color.ColoredText.localize(
