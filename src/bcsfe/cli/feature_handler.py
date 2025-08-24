@@ -78,6 +78,7 @@ class FeatureHandler:
                 "cat_shrineα": core.game.gamoto.cat_shrine.CatShrine.edit_catshrineα,
                 "unlocked_slotsα": edits.basic_items.BasicItems.edit_unlocked_slotsα,
                 "medalsα": core.game.catbase.medals.Medals.edit_all_medals,
+                "enemy_guideα": edits.enemy_editor.EnemyEditor.edit_all_enemy_guide,
             },
             "items": {
                 "catfood": edits.basic_items.BasicItems.edit_catfood,
