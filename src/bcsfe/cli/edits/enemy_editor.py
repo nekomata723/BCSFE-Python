@@ -190,3 +190,9 @@ class EnemyEditor:
             enemy_editor.unlock_enemy_guide(current_enemies)
         elif choice == 1:
             enemy_editor.remove_enemy_guide(current_enemies)
+
+    @staticmethod
+    def edit_all_enemy_guide(save_file: core.SaveFile):
+        enemy_editor = EnemyEditor(save_file)
+        enemies = enemy_editor.get_all_enemies()
+        enemy_editor.unlock_enemy_guide(enemies)
