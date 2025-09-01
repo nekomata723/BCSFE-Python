@@ -55,6 +55,7 @@ class FeatureHandler:
                 "general_ticketsα": edits.basic_items.BasicItems.edit_general_ticketsα,
                 "platinum_ticketsα": edits.basic_items.BasicItems.edit_platinum_ticketsα,
                 "legend_ticketsα": edits.basic_items.BasicItems.edit_legend_ticketsα,
+                "event_ticketsα": edits.event_tickets.EventTickets.editα,
                 "leadershipα": edits.basic_items.BasicItems.edit_leadershipα,
                 "labyrinth_medalsα": edits.basic_items.BasicItems.edit_labyrinth_medalsα,
                 "unlock_all_cats": edits.cat_editor.CatEditor.unlock_all_cats_run,
