@@ -583,6 +583,30 @@ class BasicItems:
         save_file.labyrinth_medals = values
 
     @staticmethod
+    def edit_labyrinth_medalsα(save_file: core.SaveFile):
+        names_o = core.core_data.get_gatya_item_names(save_file)
+        items = core.core_data.get_gatya_item_buy(save_file).get_by_category(11)
+        if items is None:
+            return
+        names: list[str] = []
+        for item in items:
+            name = names_o.get_name(item.id)
+            if name is None:
+                name = core.core_data.local_manager.get_key(
+                    "unknown_labyrinth_medal_name", id=item.id
+                )
+            names.append(name)
+
+        save_file.labyrinth_medals = [9999]*len(items)
+        print()
+        color.ColoredText.localize(
+            "value_changed",
+            name="地底迷宮メダル",
+            value=9999,
+            escape=True
+        )
+
+    @staticmethod
     def edit_special_skills(save_file: core.SaveFile):
         save_file.special_skills.edit(save_file)
 
