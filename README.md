@@ -85,7 +85,7 @@ py -m bcsfe
 
 Again change `py` for `python` or `python3` if needed.
 
-If you are using Windows and you are still struggling, try watching this video [here](https://youtu.be/ypmT39jqZrg).
+If you are using Windows and you are still struggling, try watching this video [here](https://codeberg.org/fieryhenry/videos/media/branch/main/bcsfe_windows_help.webm).
 
 ### Linux
 
@@ -326,7 +326,7 @@ If you want the latest features then you can install the editor from the github.
 2. Run the following commands: (You may have to replace `py` with `python` or `python3`)
 
 ```sh
-git clone https://github.com/fieryhenry/BCSFE-Python.git
+git clone https://codeberg.org/fieryhenry/BCSFE-Python.git
 cd BCSFE-Python
 py -m pip install -e .
 py -m bcsfe
@@ -339,7 +339,7 @@ Alternatively you can use pip directly, although it won't auto-update with the l
 git commits.
 
 ```sh
-py -m pip install git+https://github.com/fieryhenry/BCSFE-Python.git
+py -m pip install git+https://codeberg.org/fieryhenry/BCSFE-Python.git
 py -m bcsfe
 ```
 
@@ -347,8 +347,8 @@ If you want to use the editor again all you need to do is run the `py -m bcsfe` 
 
 ## Documentation
 
-- [Custom Editor Locales](https://github.com/fieryhenry/ExampleEditorLocale)
-- [Custom Editor Themes](https://github.com/fieryhenry/ExampleEditorTheme)
+- [Custom Editor Locales](https://codeberg.org/fieryhenry/ExampleEditorLocale)
+- [Custom Editor Themes](https://codeberg.org/fieryhenry/ExampleEditorTheme)
 
 I only have documentation for the locales and themes atm, but I will probably
 add more documentation in the future.
@@ -360,6 +360,8 @@ discussion in #dev-chat, or create an issue in this repo, or a draft pull reques
 
 If you need help with reverse engineering the save file, I have a basic starting guide here:
 <https://codeberg.org/fieryhenry/bc_ree>.
+
+If you want to localize the editor see [here](./LOCALIZATION.md).
 
 ## License
 

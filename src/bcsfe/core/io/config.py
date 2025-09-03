@@ -28,6 +28,7 @@ class ConfigKey(enum.Enum):
     ADB_PATH = "adb_path"
     IGNORE_PARSE_ERROR = "ignore_parse_error"
     USE_WAYDROID = "use_waydroid"
+    USE_PKEXEC_WAYDROID = "use_pkexec_waydroid"
 
 
 class Config:
@@ -73,7 +74,7 @@ class Config:
             ConfigKey.SEPARATE_CAT_EDIT_OPTIONS: True,
             ConfigKey.STRICT_BAN_PREVENTION: False,
             ConfigKey.MAX_REQUEST_TIMEOUT: 30,
-            ConfigKey.GAME_DATA_REPO: "https://raw.githubusercontent.com/fieryhenry/BCData/master/",
+            ConfigKey.GAME_DATA_REPO: "https://git.fyhenry.uk/henry/BCData/raw/branch/main/info.json",
             ConfigKey.FORCE_LANG_GAME_DATA: False,
             ConfigKey.CLEAR_TUTORIAL_ON_LOAD: True,
             ConfigKey.REMOVE_BAN_MESSAGE_ON_LOAD: True,
@@ -82,6 +83,7 @@ class Config:
             ConfigKey.ADB_PATH: "adb",
             ConfigKey.IGNORE_PARSE_ERROR: False,
             ConfigKey.USE_WAYDROID: False,
+            ConfigKey.USE_PKEXEC_WAYDROID: True,
         }
         return initial_values
 
@@ -113,6 +115,17 @@ class Config:
         if value is None:
             return self.set_default(key)
         return value
+
+    def get_game_data_repo(self, fix_old_repo: bool = True) -> str:
+        if (
+            fix_old_repo
+            and self.get_str(ConfigKey.GAME_DATA_REPO)
+            == "https://raw.githubusercontent.com/fieryhenry/BCData/master/"
+        ):
+            self.set(
+                ConfigKey.GAME_DATA_REPO, self.get_default(ConfigKey.GAME_DATA_REPO)
+            )
+        return self.get_str(ConfigKey.GAME_DATA_REPO)
 
     def get_str(self, key: ConfigKey) -> str:
         value = self.get(key)

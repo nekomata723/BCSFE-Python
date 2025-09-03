@@ -298,18 +298,22 @@ class EventChapterGroup:
         stage: int,
         clear_amount: int = 1,
         overwrite_clear_progress: bool = False,
-    ):
+    ) -> bool:
         finished = self.chapters[map].clear_stage(
             star, stage, clear_amount, overwrite_clear_progress
         )
         if finished and map + 1 < len(self.chapters):
             self.chapters[map + 1].chapters[0].chapter_unlock_state = 1
 
-    def unclear_stage(self, map: int, star: int, stage: int):
+        return finished
+
+    def unclear_stage(self, map: int, star: int, stage: int) -> bool:
         finished = self.chapters[map].unclear_stage(star, stage)
         if finished and map + 1 < len(self.chapters) and star == 0:
             for chapter in self.chapters[map + 1].chapters:
                 chapter.chapter_unlock_state = 0
+
+        return finished
 
     def clear_map(self, map: int, star: int, increment: bool = True):
         finished = self.chapters[map].clear_map(star, increment)
@@ -395,7 +399,7 @@ class EventChapterGroup:
 class EventChapters:
     def __init__(self, chapters: list[EventChapterGroup]):
         self.chapters = chapters
-        self.completed_one_level_in_chapter: dict[int, int] = {}
+        self.chapter_completion_count: dict[int, int] = {}
         self.displayed_cleared_limit_text: dict[int, bool] = {}
         self.event_start_dates: dict[int, int] = {}
         self.stages_reward_claimed: list[int] = []
@@ -408,8 +412,8 @@ class EventChapters:
         stage: int,
         clear_amount: int = 1,
         overwrite_clear_progress: bool = False,
-    ):
-        self.chapters[type].clear_stage(
+    ) -> bool:
+        return self.chapters[type].clear_stage(
             map,
             star,
             stage,
@@ -417,8 +421,8 @@ class EventChapters:
             overwrite_clear_progress,
         )
 
-    def unclear_stage(self, type: int, map: int, star: int, stage: int):
-        self.chapters[type].unclear_stage(map, star, stage)
+    def unclear_stage(self, type: int, map: int, star: int, stage: int) -> bool:
+        return self.chapters[type].unclear_stage(map, star, stage)
 
     def clear_map(self, type: int, map: int, star: int, increment: bool = True):
         self.chapters[type].clear_map(map, star, increment)
@@ -674,13 +678,13 @@ class EventChapters:
             chapter.write_legend_restrictions(data)
 
     def read_dicts(self, data: core.Data):
-        self.completed_one_level_in_chapter = data.read_int_int_dict()
+        self.chapter_completion_count = data.read_int_int_dict()
         self.displayed_cleared_limit_text = data.read_int_bool_dict()
         self.event_start_dates = data.read_int_int_dict()
         self.stages_reward_claimed = data.read_int_list()
 
     def write_dicts(self, data: core.Data):
-        data.write_int_int_dict(self.completed_one_level_in_chapter)
+        data.write_int_int_dict(self.chapter_completion_count)
         data.write_int_bool_dict(self.displayed_cleared_limit_text)
         data.write_int_int_dict(self.event_start_dates)
         data.write_int_list(self.stages_reward_claimed)
@@ -688,7 +692,7 @@ class EventChapters:
     def serialize(self) -> dict[str, Any]:
         return {
             "chapters": [chapter.serialize() for chapter in self.chapters],
-            "completed_one_level_in_chapter": self.completed_one_level_in_chapter,
+            "chapter_completion_count": self.chapter_completion_count,
             "displayed_cleared_limit_text": self.displayed_cleared_limit_text,
             "event_start_dates": self.event_start_dates,
             "stages_reward_claimed": self.stages_reward_claimed,
@@ -701,25 +705,29 @@ class EventChapters:
             for chapter in data.get("chapters", [])
         ]
         ch = EventChapters(chapters)
-        ch.completed_one_level_in_chapter = data.get(
-            "completed_one_level_in_chapter", {}
-        )
+        ch.chapter_completion_count = data.get("chapter_completion_count", {})
         ch.displayed_cleared_limit_text = data.get("displayed_cleared_limit_text", {})
         ch.event_start_dates = data.get("event_start_dates", {})
         ch.stages_reward_claimed = data.get("stages_reward_claimed", [])
         return ch
 
     def __repr__(self) -> str:
-        return f"EventChapters({self.chapters}, {self.completed_one_level_in_chapter}, {self.displayed_cleared_limit_text}, {self.event_start_dates}, {self.stages_reward_claimed})"
+        return f"EventChapters({self.chapters}, {self.chapter_completion_count}, {self.displayed_cleared_limit_text}, {self.event_start_dates}, {self.stages_reward_claimed})"
 
     def __str__(self) -> str:
         return self.__repr__()
 
     def get_total_stars(self, type: int, map: int) -> int:
-        return len(self.chapters[type].chapters[map].chapters)
+        try:
+            return len(self.chapters[type].chapters[map].chapters)
+        except IndexError:
+            return len(self.chapters[0].chapters[0].chapters)
 
     def get_total_stages(self, type: int, map: int, star: int) -> int:
-        return len(self.chapters[type].chapters[map].chapters[star].stages)
+        try:
+            return len(self.chapters[type].chapters[map].chapters[star].stages)
+        except IndexError:
+            return len(self.chapters[0].chapters[0].chapters[0].stages)
 
     @staticmethod
     def ask_stars(

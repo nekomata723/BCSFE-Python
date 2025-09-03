@@ -880,6 +880,19 @@ class Cats:
     def get_non_unlocked_cats(self) -> list[Cat]:
         return [cat for cat in self.cats if not cat.unlocked]
 
+    def get_non_gacha_cats(self, save_file: core.SaveFile) -> list[Cat]:
+        unitbuy = self.read_unitbuy(save_file)
+        cats = []
+        for cat in self.cats:
+            unit_buy_data = unitbuy.get_unit_buy(cat.id)
+            if unit_buy_data is None:
+                continue
+
+            if unit_buy_data.unlock_source != 2:
+                cats.append(cat)
+
+        return cats
+
     def read_unitbuy(self, save_file: core.SaveFile) -> UnitBuy:
         if self.unit_buy is None:
             self.unit_buy = UnitBuy(save_file)
@@ -921,22 +934,31 @@ class Cats:
                     break
         return cats
 
-    def bulk_download_names(self, save_file: core.SaveFile):
-        if self.bulk_downloaded:
+    def bulk_download_names(
+        self, save_file: core.SaveFile, current_cats: list[core.Cat] | None = None
+    ):
+        if self.bulk_downloaded and current_cats is None:
             return
         file_names: list[str] = []
         gdg = core.core_data.get_game_data_getter(save_file)
-        for cat in self.cats:
+        if current_cats is None:
+            cats = self.cats
+        else:
+            cats = current_cats
+        for cat in cats:
             if cat.names is None:
                 file_name = f"Unit_Explanation{cat.id + 1}_{core.core_data.get_lang(save_file)}.csv"
                 if gdg.is_downloaded("resLocal", file_name):
                     continue
                 file_names.append(file_name)
 
+        if len(file_names) > 50:
+            gdg.save_all_cat_names_fast()
+
         core.core_data.get_game_data_getter(save_file).download_all(
             "resLocal", file_names
         )
-        self.bulk_downloaded = True
+        self.bulk_downloaded = current_cats is None
 
     def get_cats_obtainable(self, save_file: core.SaveFile) -> list[Cat] | None:
         nyanko_picture_book = self.read_nyanko_picture_book(save_file)
@@ -1199,11 +1221,10 @@ class Cats:
 
     def read_talents(self, stream: core.Data):
         total_cats = stream.read_int()
-        counter = 0
         for _ in range(total_cats):
             cat_id = stream.read_int()
-            if self.cats[cat_id].talents is None:
-                counter += 1
+            if cat_id < 0 or cat_id >= len(self.cats):
+                continue
             self.cats[cat_id].read_talents(stream)
 
     def write_talents(self, stream: core.Data):
