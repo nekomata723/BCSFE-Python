@@ -285,6 +285,11 @@ class ChoiceInput:
                 return int_val
             if user_input == core.core_data.local_manager.get_key("quit_key"):
                 return None
+            for i, string in enumerate(self.strings):
+                if self.localize_options:
+                    string = core.core_data.local_manager.get_key(string)
+                if string.lower().strip() == user_input.lower().strip():
+                    return i + self.start_index
 
     def get_max_value(self) -> int:
         return len(self.strings) + self.start_index - 1
