@@ -217,6 +217,20 @@ class Outbreaks:
                     stage.cleared = False
 
     @staticmethod
+    def edit_all_outbreaks(save_file: core.SaveFile):
+        outbreaks = save_file.outbreaks
+        chapters = outbreaks.get_valid_chapters()
+        if not chapters:
+            color.ColoredText.localize("clear_outbreaks_success")
+            return
+        clear = True
+        for chapter in chapters:
+            chapter_id = chapter.get_true_id()
+            for stage_id in range(48):
+                outbreaks.clear_outbreak(chapter_id, stage_id, clear)
+        color.ColoredText.localize("clear_outbreaks_success")
+
+    @staticmethod
     def edit_outbreaks(save_file: core.SaveFile):
         outbreaks = save_file.outbreaks
         chapters = outbreaks.get_valid_chapters()

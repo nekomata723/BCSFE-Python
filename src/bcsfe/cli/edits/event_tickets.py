@@ -114,6 +114,56 @@ class EventTickets:
         for (event_item, gset, gatya_item), value in zip(event_ticket_items, values):
             event_tickets.edit_ticket(gatya_item.id, value)
 
+    @staticmethod
+    def editα(save_file: core.SaveFile):
+        event_tickets = EventTickets(save_file)
+        if event_tickets.gatya_event_data is None:
+            return
+        if (
+            event_tickets.gatya_option_n is None
+            or event_tickets.gatya_option_r is None
+            or event_tickets.gatya_option_e is None
+        ):
+            return
+        event_ticket_items: list[
+            tuple[
+                core.ServerGatyaDataItem, core.ServerGatyaDataSet, core.GatyaItemBuyItem
+            ]
+        ] = []
+
+        for item in event_tickets.gatya_event_data.items:
+            for gset in item.sets:
+                if gset.number == -1:
+                    continue
+                gset_opt = None
+                if item.get_normal_flag():
+                    gset_opt = event_tickets.gatya_option_n.get(gset.number)
+                elif item.get_rare_flag():
+                    gset_opt = event_tickets.gatya_option_r.get(gset.number)
+                elif item.get_collab_flag():
+                    gset_opt = event_tickets.gatya_option_e.get(gset.number)
+                if gset_opt is None:
+                    continue
+                gatya_item = event_tickets.gatya_item_buy.get(gset_opt.ticket_item_id)
+                if gatya_item is None:
+                    continue
+                category = gatya_item.category
+                if category in [
+                    core.GatyaItemCategory.EVENT_TICKETS.value,
+                    core.GatyaItemCategory.LUCKY_TICKETS_1.value,
+                    core.GatyaItemCategory.LUCKY_TICKETS_2.value,
+                ]:
+                    event_ticket_items.append((item, gset, gatya_item))
+        for (_event_item, _gset, gatya_item) in event_ticket_items:
+            event_tickets.edit_ticket(gatya_item.id, 999)
+        print()
+        cli.color.ColoredText.localize(
+            "value_changed",
+            name="イベントチケット",
+            value=999,
+            escape=True,
+        )
+
     def get_ticket(self, item_id: int) -> int | None:
         item = self.gatya_item_buy.get(item_id)
         if item is None:

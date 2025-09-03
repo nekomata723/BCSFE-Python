@@ -252,3 +252,10 @@ class NyankoClub:
         else:
             club.get_gold_pass(officer_id, 30, save_file)
             color.ColoredText.localize("gold_pass_get_success", id=officer_id)
+
+    @staticmethod
+    def edit_gold_passα(save_file: core.SaveFile):
+        club = save_file.officer_pass.gold_pass
+        officer_id = NyankoClub.get_random_officer_id()
+        club.get_gold_pass(officer_id, 30, save_file)
+        color.ColoredText.localize("gold_pass_get_success", id=officer_id)

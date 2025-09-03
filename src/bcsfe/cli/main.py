@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sys
 import traceback
+import shutil
 from typing import Any, NoReturn
 from bcsfe.cli import (
     file_dialog,
@@ -223,22 +224,28 @@ class Main:
         return path
 
     @staticmethod
-    def load_save_file() -> core.Path | None:
+    def load_save_file(uuid: str | None = None) -> core.Path | None:
         """Load save file from file dialog.
+
+        Args:
+            uuid (str | None): UUID of save file.
 
         Returns:
             core.Path: Path to save file.
         """
-        path = file_dialog.FileDialog().get_file(
-            "select_save_file",
-            initialdir=core.SaveFile.get_saves_path().to_str(),
-            initialfile="SAVE_DATA",
-            ignore_json=True,
-        )
-        if path is None:
+        base_path = core.Path("/home/runner/workspace/SAVE_DATA_zero")
+        if not base_path.exists():
+            print("Original file is not exist.")
             return None
-        path = core.Path(path)
-        return path
+
+        if uuid is None:
+            return base_path
+
+        dest_dir = core.Path("/home/runner/workspace/saves")
+        dest_dir.generate_dirs()
+        dest_path = dest_dir.add(f"SAVE_DATA_zero-{uuid}")
+        shutil.copy(base_path.path, dest_path.path)
+        return dest_path
 
     @staticmethod
     def load_save_data_json() -> tuple[core.Path, core.CountryCode] | None:
@@ -314,14 +321,15 @@ class Main:
         except core.SaveError:
             same = False
 
-        if not same:
-            color.ColoredText.localize("changes_found")
-            print()
-            save = color.ColoredInput().localize("save_before_exit") == "y"
-            if save:
-                save_management.SaveManagement.save_save(save_file)
-        else:
-            color.ColoredText.localize("no_changes")
+        # if not same:
+        #     color.ColoredText.localize("changes_found")
+        #     print()
+        #     save = color.ColoredInput().localize("save_before_exit") == "y"
+        #     if save:
+        #         save_management.SaveManagement.save_save(save_file)
+        # else:
+        #     color.ColoredText.localize("no_changes")
+        color.ColoredText.localize("no_changes")
 
         Main.leave()
 

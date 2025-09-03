@@ -503,6 +503,26 @@ class Ototo:
 
         self.display_current_cannons(save_file)
 
+    def edit_all_cannons(self, save_file: core.SaveFile):
+        if self.cannons is None:
+            self.cannons = Cannons.init(save_file.game_version)
+        cannon_recipe = CastleRecipeUnlock(save_file)
+        for cannon_id, cannon in self.cannons.cannons.items():
+            cannon.development = max(cannon.development, 3)
+            for part_id in range(len(cannon.levels)):
+                max_level = cannon_recipe.get_max_level(cannon_id, part_id)
+                if max_level is None:
+                    continue
+                if cannon_id == 0:
+                    cannon.levels[part_id] = max_level - 1
+                else:
+                    if part_id == 0:
+                        cannon.levels[part_id] = max_level - 1
+                    else:
+                        cannon.levels[part_id] = max_level
+        color.ColoredText.localize("cannon_success")
+        self.display_current_cannons(save_file)
+
     def select_development(self) -> int | None:
         return dialog_creator.ChoiceInput.from_reduced(
             ["none", "foundation", "style", "effect"],
@@ -658,3 +678,6 @@ class Ototo:
 
 def edit_cannon(save_file: core.SaveFile):
     save_file.ototo.edit_cannon(save_file)
+
+def edit_cannonα(save_file: core.SaveFile):
+    save_file.ototo.edit_all_cannons(save_file)

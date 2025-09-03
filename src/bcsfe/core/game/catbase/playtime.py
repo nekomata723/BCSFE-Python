@@ -95,3 +95,18 @@ def edit(save_file: core.SaveFile):
         seconds=play_time.just_seconds,
         frames=play_time.frames,
     )
+
+def editα(save_file: core.SaveFile):
+    hours = 9999
+    minutes = 59
+    seconds = 0
+    play_time = PlayTime.from_hours_mins_secs(hours, minutes, seconds)
+    save_file.officer_pass.play_time = play_time.frames
+    print()
+    color.ColoredText.localize(
+        "playtime_edited",
+        hours=play_time.hours,
+        minutes=play_time.just_minutes,
+        seconds=play_time.just_seconds,
+        frames=play_time.frames,
+    )

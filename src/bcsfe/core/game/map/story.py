@@ -551,6 +551,23 @@ class StoryChapters:
             save_file,
         )
 
+    @staticmethod
+    def clear_all_story(save_file: core.SaveFile):
+        story = save_file.story
+        chapters = story.get_real_chapters()
+        if not chapters:
+            color.ColoredText.localize("map_chapters_edited")
+            return
+        for chapter_id, chapter in enumerate(chapters):
+            num_stages = len(chapter.stages)
+            for stage_id in range(num_stages):
+                chapter.clear_stage(
+                    stage_id,
+                    clear_amount=1,
+                    overwrite_clear_progress=True,
+                )
+        color.ColoredText.localize("map_chapters_edited")
+
     def edit_chapters(self, save_file: core.SaveFile):
         chapters = self.get_real_chapters()
         names = StoryChapters.get_chapter_names(save_file)
@@ -887,6 +904,18 @@ class StoryChapters:
         elif choice == 2:
             StoryChapters.edit_treasures_groups(save_file, selected_chapters)
 
+        color.ColoredText.localize("treasures_edited")
+
+    def edit_all_treasures(save_file: core.SaveFile):
+        chapters = save_file.story.get_real_chapters()
+        if not chapters:
+            return
+        for chapter in chapters:
+            stages = chapter.get_valid_treasure_stages()
+            if not stages:
+                continue
+            for stage in stages:
+                stage.set_treasure(3)
         color.ColoredText.localize("treasures_edited")
 
     @staticmethod
