@@ -48,6 +48,11 @@ class UncannyChapters:
         uncanny.chapters.edit_chapters(save_file, "NA")
 
     @staticmethod
+    def edit_all_uncanny(save_file: core.SaveFile):
+        uncanny = save_file.uncanny
+        uncanny.chapters.edit_chapters_auto(save_file, "NA")
+
+    @staticmethod
     def edit_catamin_stages(save_file: core.SaveFile):
         choice = dialog_creator.ChoiceInput.from_reduced(
             ["change_clear_amount_catamin", "clear_unclear_stage_catamin"],

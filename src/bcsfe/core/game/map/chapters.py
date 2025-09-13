@@ -359,6 +359,9 @@ class Chapters:
     ) -> dict[int, bool] | None:
         return edits.map.edit_chapters(save_file, self, letter_code)
 
+    def edit_chapters_auto(self, save_file: core.SaveFile, letter_code: str):
+        edits.map.edit_chapters_auto(save_file, self, letter_code)
+
     def set_total_stages(self, map: int, total_stages: int):
         for chapter in self.chapters[map].chapters:
             chapter.total_stages = total_stages

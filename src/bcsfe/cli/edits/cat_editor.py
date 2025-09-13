@@ -251,6 +251,13 @@ class CatEditor:
             cat.unlock(self.save_file)
         color.ColoredText.localize("unlock_success")
 
+    def unlock_all_cats(self):
+        cats_to_unlock = self.get_cats_obtainable()
+        if cats_to_unlock:
+            self.unlock_cats(cats_to_unlock)
+        else:
+            color.ColoredText.localize("unlock_success")
+
     def remove_cats(self, cats: list[core.Cat]):
         reset = core.core_data.config.get_bool(core.ConfigKey.RESET_CAT_DATA)
         cats = self.get_save_cats(cats)
@@ -258,6 +265,13 @@ class CatEditor:
             cat.remove(reset=reset, save_file=self.save_file)
         color.ColoredText.localize("remove_success")
 
+    def remove_unobtainable_cats(self):
+        cats_to_remove = self.get_cats_unobtainable()
+        if cats_to_remove:
+            self.remove_cats(cats_to_remove)
+        else:
+            color.ColoredText.localize("remove_success")
+    
     def get_save_cats(self, cats: list[core.Cat]):
         ct_cats: list[core.Cat] = []
         for cat in cats:
@@ -286,6 +300,13 @@ class CatEditor:
             self.save_file, cats, force, set_current_forms
         )
         color.ColoredText.localize("fourth_form_success")
+
+    def all_fourth_form_cats(self, force: bool = False):
+        cats_to_upgrade = self.get_cats_obtainable()
+        if cats_to_upgrade:
+            self.fourth_form_cats(cats_to_upgrade, force=force)
+        else:
+            color.ColoredText.localize("fourth_form_success")
 
     def remove_true_form_cats(self, cats: list[core.Cat]):
         cats = self.get_save_cats(cats)
@@ -364,6 +385,21 @@ class CatEditor:
                 cat.set_upgrade(self.save_file, upgrade, True)
         if success:
             color.ColoredText.localize("upgrade_success")
+
+    def upgrade_all_cats_max(self):
+        cats = self.get_cats_obtainable()
+        if not cats:
+            color.ColoredText.localize("upgrade_success")
+            return
+        for cat in cats:
+            power_up = core.PowerUpHelper(cat, self.save_file)
+            max_base = power_up.get_max_max_base_upgrade_level() - 1
+            max_plus = power_up.get_max_max_plus_upgrade_level()
+            power_up.reset_upgrade()
+            power_up.upgrade_by(max_base)
+            upgrade = core.Upgrade(max_plus, max_base)
+            cat.set_upgrade(self.save_file, upgrade, True)
+        color.ColoredText.localize("upgrade_success")
 
     def remove_talents_cats(self, cats: list[core.Cat]):
         for cat in cats:
@@ -471,6 +507,29 @@ class CatEditor:
                     talent.level = max_levels[i]
         color.ColoredText.localize("talents_success")
 
+    def upgrade_all_talents_cats(self):
+        cats = self.get_cats_obtainable()
+        if not cats:
+            color.ColoredText.localize("talents_success")
+            return
+        talent_data = self.save_file.cats.read_talent_data(self.save_file)
+        if talent_data is None:
+            color.ColoredText.localize("talents_success")
+            return
+        for cat in cats:
+            if cat.talents is None:
+                continue
+            data = talent_data.get_cat_talents(cat)
+            if data is None:
+                continue
+            talent_names, max_levels, current_levels, ids = data
+            for i, id in enumerate(ids):
+                talent = cat.get_talent_from_id(id)
+                if talent is None:
+                    continue
+                talent.level = max_levels[i]
+        color.ColoredText.localize("talents_success")
+
     @staticmethod
     def edit_cats(save_file: core.SaveFile):
         cat_editor, current_cats = CatEditor.from_save_file(save_file)
@@ -508,6 +567,16 @@ class CatEditor:
         elif choice == 1:
             cat_editor.remove_cats(current_cats)
         CatEditor.set_rank_up_sale(save_file)
+
+    @staticmethod
+    def unlock_all_cats_run(save_file: core.SaveFile):
+        cat_editor = CatEditor(save_file)
+        cat_editor.unlock_all_cats()
+
+    @staticmethod
+    def remove_unobtainable_cats_run(save_file: core.SaveFile):
+        cat_editor = CatEditor(save_file)
+        cat_editor.remove_unobtainable_cats()
 
     @staticmethod
     def true_form_remove_form_cats_run(
@@ -572,11 +641,22 @@ class CatEditor:
         cat_editor.fourth_form_cats(current_cats, force=True)
 
     @staticmethod
+    def all_fourth_form_cats_run(save_file: core.SaveFile):
+        cat_editor = CatEditor(save_file)
+        cat_editor.all_fourth_form_cats(force=False)
+
+    @staticmethod
     def upgrade_cats_run(save_file: core.SaveFile):
         cat_editor, current_cats = CatEditor.from_save_file(save_file)
         if cat_editor is None:
             return
         cat_editor.upgrade_cats(current_cats)
+        CatEditor.set_rank_up_sale(save_file)
+
+    @staticmethod
+    def upgrade_all_cats_run(save_file: core.SaveFile):
+        cat_editor = CatEditor(save_file)
+        cat_editor.upgrade_all_cats_max()
         CatEditor.set_rank_up_sale(save_file)
 
     @staticmethod
@@ -604,6 +684,11 @@ class CatEditor:
             cat_editor.upgrade_talents_cats(current_cats)
         elif choice == 1:
             cat_editor.remove_talents_cats(current_cats)
+
+    @staticmethod
+    def upgrade_all_talents_cats_run(save_file: core.SaveFile):
+        cat_editor = CatEditor(save_file)
+        cat_editor.upgrade_all_talents_cats()
 
     @staticmethod
     def unlock_cat_guide_remove_guide_run(
