@@ -38,7 +38,7 @@ class FeatureHandler:
                 "adb_push_rerun": save_management.SaveManagement.adb_push_rerun,
                 "export_save": save_management.SaveManagement.export_save,
                 "load_save": save_management.SaveManagement.load_save,
-                "init_save": save_management.SaveManagement.init_save,
+                # "init_save": save_management.SaveManagement.init_save,
                 "convert_region": save_management.SaveManagement.convert_save_cc,
                 "convert_version": save_management.SaveManagement.convert_save_gv,
             },
@@ -105,6 +105,7 @@ class FeatureHandler:
                 "100_million_tickets": edits.basic_items.BasicItems.edit_100_million_ticket,
                 "event_tickets": edits.event_tickets.EventTickets.edit,
                 "treasure_chests": edits.basic_items.BasicItems.edit_treasure_chests,
+                "reset_golden_cat_cpus": edits.basic_items.BasicItems.reset_golden_cat_cpus,
             },
             "cats_special_skills": cat_features,
             "levels": {
@@ -112,7 +113,8 @@ class FeatureHandler:
                 "clear_story": core.game.map.story.StoryChapters.clear_story,
                 "challenge_score": core.game.map.challenge.edit_challenge_score,
                 "dojo_score": core.game.map.dojo.edit_dojo_score,
-                "enigma": core.game.map.enigma.edit_enigma,
+                "add_enigma_stages": core.game.map.enigma.edit_enigma,
+                "clear_enigma_stages": core.game.map.gauntlets.GauntletChapters.edit_enigma_stages,
                 "unlock_aku_realm": edits.aku_realm.unlock_aku_realm,
                 "story_treasures": core.game.map.story.StoryChapters.edit_treasures,
                 "outbreaks": core.game.map.outbreaks.Outbreaks.edit_outbreaks,
@@ -130,6 +132,7 @@ class FeatureHandler:
                 "legend_quest": core.game.map.legend_quest.LegendQuestChapters.edit_legend_quest,
                 "towers": core.game.map.tower.TowerChapters.edit_towers,
                 "zero_legends": core.game.map.zero_legends.ZeroLegendsChapters.edit_zero_legends,
+                "dojo_catclaw_championships": core.game.map.zero_legends.ZeroLegendsChapters.edit_catclaw_championships,
             },
             "gamototo": {
                 "engineers": edits.basic_items.BasicItems.edit_engineers,
@@ -159,6 +162,7 @@ class FeatureHandler:
             },
             "other": {
                 "unlocked_slots": edits.basic_items.BasicItems.edit_unlocked_slots,
+                "reset_gambling_events": core.GamblingEvent.reset_events,
                 "restart_pack": edits.basic_items.BasicItems.set_restart_pack,
                 "special_skills": edits.basic_items.BasicItems.edit_special_skills,
                 "playtime": core.game.catbase.playtime.edit,
@@ -271,6 +275,8 @@ class FeatureHandler:
 
         else:
             feats = self.search_features(usr_input)
+            if not feats:
+                color.ColoredText.localize("no_feature_with_name", name=usr_input)
             kv_map = list(feats.items())
             kv_map.sort(key=lambda v: v[1], reverse=True)
             selected_features = [v[0] for v in kv_map]

@@ -651,31 +651,7 @@ class SaveFile:
 
         if self.game_version >= 90000:
             self.medals = core.Medals.read(self.data)
-            total = self.data.read_short()
-            self.ushbd1 = self.data.read_short_bool_dict(total)
-            length = self.data.read_short()
-            self.uidiid1: dict[int, dict[int, int]] = {}
-            for _ in range(length):
-                key = self.data.read_short()
-                length = self.data.read_short()
-                for _ in range(length):
-                    key2 = self.data.read_short()
-                    value = self.data.read_short()
-                    if key not in self.uidiid1:
-                        self.uidiid1[key] = {}
-                    self.uidiid1[key][key2] = value
-                if length == 0:
-                    self.uidiid1[key] = {}
-
-            length = self.data.read_short()
-            self.uiid2: dict[int, int | float] = {}
-            for _ in range(length):
-                key = self.data.read_short()
-                if self.game_version < 90100:
-                    value = self.data.read_double()
-                else:
-                    value = self.data.read_int()
-                self.uiid2[key] = value
+            self.wildcat_slots = core.GamblingEvent.read(self.data, self.game_version)
 
             assert self.data.read_int() == 90000
 
@@ -708,7 +684,7 @@ class SaveFile:
             assert self.data.read_int() == 90300
 
         if self.game_version >= 90400:
-            self.gauntlets_2 = core.GauntletChapters.read(self.data)
+            self.enigma_clears = core.GauntletChapters.read(self.data)
             self.enigma = core.Enigma.read(self.data, self.game_version)
             self.cleared_slots = core.ClearedSlots.read(self.data)
 
@@ -845,32 +821,7 @@ class SaveFile:
             assert self.data.read_int() == 100600
 
         if self.game_version >= 100700:
-            length = self.data.read_short()
-            self.ushbd2 = self.data.read_short_bool_dict(length)
-
-            length = self.data.read_short()
-            self.ushdshd: dict[int, dict[int, int]] = {}
-            for _ in range(length):
-                key = self.data.read_short()
-                length = self.data.read_short()
-                for _ in range(length):
-                    key2 = self.data.read_short()
-                    value = self.data.read_short()
-                    if key not in self.ushdshd:
-                        self.ushdshd[key] = {}
-                    self.ushdshd[key][key2] = value
-                if length == 0:
-                    self.ushdshd[key] = {}
-
-            length = self.data.read_short()
-            self.ushid: dict[int, int | float] = {}
-            for _ in range(length):
-                key = self.data.read_short()
-                if self.game_version < 90100:
-                    value = self.data.read_double()
-                else:
-                    value = self.data.read_int()
-                self.ushid[key] = value
+            self.cat_scratcher = core.GamblingEvent.read(self.data, self.game_version)
 
             assert self.data.read_int() == 100700
 
@@ -1043,7 +994,7 @@ class SaveFile:
             self.ub34 = self.data.read_bool()
 
             self.ui21 = self.data.read_int()
-            self.uby13 = self.data.read_byte()
+            self.golden_cpu_count = self.data.read_byte()
 
             assert self.data.read_int() == 120500
 
@@ -1184,29 +1135,7 @@ class SaveFile:
 
                 self.uild1[key] = data3
 
-            # probably cat claw championship stuff
-            length = self.data.read_short()
-
-            self.uill: list[tuple[int, list[tuple[int, int, int, list[int]]]]] = []
-
-            for _ in range(length):
-                value = self.data.read_byte()
-                l1: list[tuple[int, int, int, list[int]]] = []
-                length2 = self.data.read_byte()
-                for _ in range(length2):
-                    value2 = self.data.read_byte()
-                    value3 = self.data.read_byte()
-                    value4 = self.data.read_byte()
-                    length3 = self.data.read_short()
-
-                    l2: list[int] = []
-
-                    for _ in range(length3):
-                        value5 = self.data.read_short()
-                        l2.append(value5)
-                    l1.append((value2, value3, value4, l2))
-
-                self.uill.append((value, l1))
+            self.dojo_chapters = core.ZeroLegendsChapters.read(self.data)
 
             length = self.data.read_short()
 
@@ -1817,23 +1746,7 @@ class SaveFile:
 
         if self.game_version >= 90000:
             self.medals.write(self.data)
-            self.data.write_short(len(self.ushbd1))
-            self.data.write_short_bool_dict(self.ushbd1, write_length=False)
-            self.data.write_short(len(self.uidiid1))
-            for key, value in self.uidiid1.items():
-                self.data.write_short(key)
-                self.data.write_short(len(value))
-                for key2, value2 in value.items():
-                    self.data.write_short(key2)
-                    self.data.write_short(value2)
-
-            self.data.write_short(len(self.uiid2))
-            for key, value in self.uiid2.items():
-                self.data.write_short(key)
-                if self.game_version < 90100:
-                    self.data.write_double(value)
-                else:
-                    self.data.write_int(int(value))
+            self.wildcat_slots.write(self.data, self.game_version)
 
             self.data.write_int(90000)
 
@@ -1878,7 +1791,7 @@ class SaveFile:
             self.data.write_int(90300)
 
         if self.game_version >= 90400:
-            self.gauntlets_2.write(self.data)
+            self.enigma_clears.write(self.data)
             self.enigma.write(self.data, self.game_version)
             self.cleared_slots.write(self.data)
             self.data.write_int(90400)
@@ -2008,24 +1921,7 @@ class SaveFile:
             self.data.write_int(100600)
 
         if self.game_version >= 100700:
-            self.data.write_short(len(self.ushbd2))
-            self.data.write_short_bool_dict(self.ushbd2, write_length=False)
-
-            self.data.write_short(len(self.ushdshd))
-            for key, value in self.ushdshd.items():
-                self.data.write_short(key)
-                self.data.write_short(len(value))
-                for key2, value2 in value.items():
-                    self.data.write_short(key2)
-                    self.data.write_short(value2)
-
-            self.data.write_short(len(self.ushid))
-            for key, value in self.ushid.items():
-                self.data.write_short(key)
-                if self.game_version < 90100:
-                    self.data.write_double(value)
-                else:
-                    self.data.write_int(int(value))
+            self.cat_scratcher.write(self.data, self.game_version)
 
             self.data.write_int(100700)
 
@@ -2172,7 +2068,7 @@ class SaveFile:
             self.data.write_bool(self.ub33)
             self.data.write_bool(self.ub34)
             self.data.write_int(self.ui21)
-            self.data.write_byte(self.uby13)
+            self.data.write_byte(self.golden_cpu_count)
 
             self.data.write_int(120500)
 
@@ -2285,20 +2181,7 @@ class SaveFile:
                 for val in value:
                     self.data.write_byte(val)
 
-            self.data.write_short(len(self.uill))
-
-            for value1, value2 in self.uill:
-                self.data.write_byte(value1)
-                self.data.write_byte(len(value2))
-
-                for val3, val4, val5, val6 in value2:
-                    self.data.write_byte(val3)
-                    self.data.write_byte(val4)
-                    self.data.write_byte(val5)
-                    self.data.write_short(len(val6))
-
-                    for val7 in val6:
-                        self.data.write_short(val7)
+            self.dojo_chapters.write(self.data)
 
             self.data.write_short(len(self.uil9))
             for val in self.uil9:
@@ -2579,9 +2462,7 @@ class SaveFile:
             "uby2": self.uby2,
             "restart_pack": self.restart_pack,
             "medals": self.medals.serialize(),
-            "ushbd1": self.ushbd1,
-            "uidiid1": self.uidiid1,
-            "uiid2": self.uiid2,
+            "wildcat_slots": self.wildcat_slots.serialize(),
             "ush2": self.ush2,
             "ush3": self.ush3,
             "ui15": self.ui15,
@@ -2589,7 +2470,7 @@ class SaveFile:
             "utl1": self.utl1,
             "uidd1": self.uidd1,
             "gauntlets": self.gauntlets.serialize(),
-            "gauntlets_2": self.gauntlets_2.serialize(),
+            "enigma_clears": self.enigma_clears.serialize(),
             "enigma": self.enigma.serialize(),
             "cleared_slots": self.cleared_slots.serialize(),
             "collab_gauntlets": self.collab_gauntlets.serialize(),
@@ -2629,9 +2510,7 @@ class SaveFile:
             "ud10": self.ud10,
             "platinum_shards": self.platinum_shards,
             "ub15": self.ub15,
-            "ushbd2": self.ushbd2,
-            "ushdshd": self.ushdshd,
-            "ushid": self.ushid,
+            "cat_scratcher": self.cat_scratcher.serialize(),
             "aku": self.aku.serialize(),
             "ub16": self.ub16,
             "ub17": self.ub17,
@@ -2688,7 +2567,7 @@ class SaveFile:
             "ub33": self.ub33,
             "ub34": self.ub34,
             "ui21": self.ui21,
-            "uby13": self.uby13,
+            "golden_cpu_count": self.golden_cpu_count,
             "sound_effects_volume": self.sound_effects_volume,
             "background_music_volume": self.background_music_volume,
             "ustl1": self.ustl1,
@@ -2712,7 +2591,7 @@ class SaveFile:
             "ud17": self.ud17,
             "uby20": self.uby20,
             "uild1": self.uild1,
-            "uill": self.uill,
+            "dojo_chapters": self.dojo_chapters.serialize(),
             "uil9": self.uil9,
             "ub35": self.ub35,
             "ud18": self.ud18,
@@ -2953,9 +2832,9 @@ class SaveFile:
         save_file.uby2 = data.get("uby2", 0)
         save_file.restart_pack = data.get("restart_pack", 0)
         save_file.medals = core.Medals.deserialize(data.get("medals", {}))
-        save_file.ushbd1 = data.get("ushbd1", {})
-        save_file.uidiid1 = data.get("uidiid1", {})
-        save_file.uiid2 = data.get("uiid2", {})
+        save_file.wildcat_slots = core.GamblingEvent.deserialize(
+            data.get("wildcat_slots", {})
+        )
         save_file.ush2 = data.get("ush2", 0)
         save_file.ush3 = data.get("ush3", 0)
         save_file.ui15 = data.get("ui15", 0)
@@ -2965,8 +2844,8 @@ class SaveFile:
         save_file.gauntlets = core.GauntletChapters.deserialize(
             data.get("gauntlets", {})
         )
-        save_file.gauntlets_2 = core.GauntletChapters.deserialize(
-            data.get("gauntlets_2", {})
+        save_file.enigma_clears = core.GauntletChapters.deserialize(
+            data.get("enigma_clears", {})
         )
         save_file.enigma = core.Enigma.deserialize(data.get("enigma", {}))
         save_file.cleared_slots = core.ClearedSlots.deserialize(
@@ -3011,9 +2890,9 @@ class SaveFile:
         save_file.ud10 = data.get("ud10", 0.0)
         save_file.platinum_shards = data.get("platinum_shards", 0)
         save_file.ub15 = data.get("ub15", False)
-        save_file.ushbd2 = data.get("ushbd2", {})
-        save_file.ushdshd = data.get("ushdshd", {})
-        save_file.ushid = data.get("ushid", {})
+        save_file.cat_scratcher = core.GamblingEvent.deserialize(
+            data.get("cat_scratcher", {})
+        )
         save_file.aku = core.AkuChapters.deserialize(data.get("aku", {}))
         save_file.ub16 = data.get("ub16", False)
         save_file.ub17 = data.get("ub17", False)
@@ -3074,7 +2953,7 @@ class SaveFile:
         save_file.ub33 = data.get("ub33", False)
         save_file.ub34 = data.get("ub34", False)
         save_file.ui21 = data.get("ui21", 0)
-        save_file.uby13 = data.get("uby13", 0)
+        save_file.golden_cpu_count = data.get("golden_cpu_count", 0)
         save_file.sound_effects_volume = data.get("sound_effects_volume", 0)
         save_file.background_music_volume = data.get("background_music_volume", 0)
         save_file.ustl1 = data.get("ustl1", [])
@@ -3098,7 +2977,9 @@ class SaveFile:
         save_file.ud17 = data.get("ud17", 0.0)
         save_file.uby20 = data.get("uby20", 0)
         save_file.uild1 = data.get("uild1", {})
-        save_file.uill = data.get("uill", [])
+        save_file.dojo_chapters = core.ZeroLegendsChapters.deserialize(
+            data.get("dojo_chapters", [])
+        )
         save_file.uil9 = data.get("uil9", [])
         save_file.ub35 = data.get("ub35", False)
         save_file.ud18 = data.get("ud18", 0.0)
@@ -3303,7 +3184,6 @@ class SaveFile:
         self.uil13 = []
 
         self.uiil1 = []
-        self.uill = []
 
         self.usl1 = []
         self.usl2 = []
@@ -3406,7 +3286,7 @@ class SaveFile:
         self.uby10 = 0
         self.uby11 = 0
         self.uby12 = 0
-        self.uby13 = 0
+        self.golden_cpu_count = 0
         self.uby14 = 0
         self.uby15 = 0
         self.uby16 = 0
@@ -3467,7 +3347,7 @@ class SaveFile:
         self.legend_quest = core.LegendQuestChapters.init()
         self.medals = core.Medals.init()
         self.gauntlets = core.GauntletChapters.init()
-        self.gauntlets_2 = core.GauntletChapters.init()
+        self.enigma_clears = core.GauntletChapters.init()
         self.enigma = core.Enigma.init()
         self.cleared_slots = core.ClearedSlots.init()
         self.collab_gauntlets = core.GauntletChapters.init()
@@ -3476,16 +3356,13 @@ class SaveFile:
         self.aku = core.AkuChapters.init()
         self.behemoth_culling = core.GauntletChapters.init()
         self.zero_legends = core.ZeroLegendsChapters.init()
+        self.dojo_chapters = core.ZeroLegendsChapters.init()
+        self.wildcat_slots = core.GamblingEvent.init()
+        self.cat_scratcher = core.GamblingEvent.init()
 
         self.uiid1 = {}
-        self.ushbd1 = {}
-        self.uidiid1 = {}
-        self.uiid2 = {}
         self.uidd1 = {}
         self.uidiid2 = {}
-        self.ushbd2 = {}
-        self.ushdshd = {}
-        self.ushid = {}
         self.ushdshd2 = {}
         self.ushdd = {}
         self.ushdd2 = {}
