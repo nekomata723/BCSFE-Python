@@ -302,7 +302,7 @@ class CatEditor:
         color.ColoredText.localize("fourth_form_success")
 
     def all_fourth_form_cats(self, force: bool = False):
-        cats_to_upgrade = self.get_cats_obtainable()
+        cats_to_upgrade = self.get_current_cats()
         if cats_to_upgrade:
             self.fourth_form_cats(cats_to_upgrade, force=force)
         else:
@@ -387,7 +387,7 @@ class CatEditor:
             color.ColoredText.localize("upgrade_success")
 
     def upgrade_all_cats_max(self):
-        cats = self.get_cats_obtainable()
+        cats = self.get_current_cats()
         if not cats:
             color.ColoredText.localize("upgrade_success")
             return
