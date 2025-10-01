@@ -274,3 +274,14 @@ class UserRankRewards:
 def edit_user_rank_rewards(save_file: core.SaveFile):
     user_rank_rewards = save_file.user_rank_rewards
     user_rank_rewards.edit(save_file)
+
+def edit_all_user_rank_rewards(save_file: core.SaveFile):
+    user_rank_rewards = save_file.user_rank_rewards
+    rank_gifts = core.core_data.get_rank_gifts(save_file)
+    if rank_gifts.rank_gift is None:
+        return
+    user_rank = save_file.calculate_user_rank()
+    for rank_gift in rank_gifts.rank_gift:
+        if rank_gift.threshold <= user_rank:
+            user_rank_rewards.set_claimed(rank_gift.index, True)
+    color.ColoredText.localize("ur_claimed_success")
