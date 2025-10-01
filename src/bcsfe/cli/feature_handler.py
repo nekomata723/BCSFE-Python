@@ -83,6 +83,7 @@ class FeatureHandler:
                 "unlocked_slotsα": edits.basic_items.BasicItems.edit_unlocked_slotsα,
                 "medalsα": core.game.catbase.medals.Medals.edit_all_medals,
                 "enemy_guideα": edits.enemy_editor.EnemyEditor.edit_all_enemy_guide,
+                "user_rank_rewardsα": core.game.catbase.user_rank_rewards.edit_all_user_rank_rewards,
             },
             "items": {
                 "catfood": edits.basic_items.BasicItems.edit_catfood,
