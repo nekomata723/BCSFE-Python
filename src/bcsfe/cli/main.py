@@ -248,6 +248,14 @@ class Main:
         return dest_path
 
     @staticmethod
+    def load_complete_save():
+        base_path = core.Path("/home/runner/workspace/SAVE_DATA_complete")
+        if not base_path.exists():
+            print("Original file is not exist.")
+            return None
+        return base_path
+    
+    @staticmethod
     def load_save_data_json() -> tuple[core.Path, core.CountryCode] | None:
         """Load save data from json file.
 
