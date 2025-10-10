@@ -249,7 +249,7 @@ class Main:
 
     @staticmethod
     def load_complete_save():
-        base_path = core.Path("/home/runner/workspace/SAVE_DATA_complete")
+        base_path = core.Path("/home/container/SAVE_DATA_complete")
         if not base_path.exists():
             print("Original file is not exist.")
             return None
