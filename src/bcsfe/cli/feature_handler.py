@@ -84,6 +84,7 @@ class FeatureHandler:
                 "medalsα": core.game.catbase.medals.Medals.edit_all_medals,
                 "enemy_guideα": edits.enemy_editor.EnemyEditor.edit_all_enemy_guide,
                 "user_rank_rewardsα": core.game.catbase.user_rank_rewards.edit_all_user_rank_rewards,
+                "inquiry_codeα": edits.basic_items.BasicItems.edit_inquiry_codeα,
             },
             "items": {
                 "catfood": edits.basic_items.BasicItems.edit_catfood,
