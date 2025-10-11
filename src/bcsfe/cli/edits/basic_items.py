@@ -516,6 +516,18 @@ class BasicItems:
         ).edit()
 
     @staticmethod
+    def edit_inquiry_codeα(save_file: core.SaveFile):
+        item_name = save_file.get_localizable().get("autoSave_txt5")
+        save_file.inquiry_code = "a"
+        print()
+        color.ColoredText.localize(
+            "value_changed",
+            name="お問い合わせコード",
+            value="a",
+            escape=True
+        )
+
+    @staticmethod
     def edit_password_refresh_token(save_file: core.SaveFile):
         should_exit = not dialog_creator.YesNoInput().get_input_once(
             "password_refresh_token_warning"
