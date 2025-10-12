@@ -310,8 +310,8 @@ class ZeroLegendsChapters:
             save_file, self, letter_code, no_r_prefix=no_r_prefix, base_index=base_index
         )
 
-    def edit_chapters_auto(self, save_file: core.SaveFile, letter_code: str):
-        edits.map.edit_chapters_auto(save_file, self, letter_code)
+    def edit_chapters_auto(self, save_file: core.SaveFile, letter_code: str, no_r_prefix: bool = False, base_index: int | None = None):
+        edits.map.edit_chapters_auto(save_file, self, letter_code, no_r_prefix=no_r_prefix, base_index=base_index)
 
     def unclear_rest(self, stages: list[int], stars: int, id: int):
         if not stages:
