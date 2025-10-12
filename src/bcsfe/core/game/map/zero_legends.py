@@ -294,6 +294,11 @@ class ZeroLegendsChapters:
         zero_legends_chapters = save_file.dojo_chapters
         zero_legends_chapters.edit_chapters(save_file, "G", True, base_index=37000)
 
+    @staticmethod
+    def edit_all_catclaw_championships(save_file: core.SaveFile):
+        zero_legends_chapters = save_file.dojo_chapters
+        zero_legends_chapters.edit_chapters_auto(save_file, "G", True, base_index=37000)
+
     def edit_chapters(
         self,
         save_file: core.SaveFile,
@@ -305,8 +310,8 @@ class ZeroLegendsChapters:
             save_file, self, letter_code, no_r_prefix=no_r_prefix, base_index=base_index
         )
 
-    def edit_chapters_auto(self, save_file: core.SaveFile, letter_code: str):
-        edits.map.edit_chapters_auto(save_file, self, letter_code)
+    def edit_chapters_auto(self, save_file: core.SaveFile, letter_code: str, no_r_prefix: bool = False, base_index: int | None = None):
+        edits.map.edit_chapters_auto(save_file, self, letter_code, no_r_prefix=no_r_prefix, base_index=base_index)
 
     def unclear_rest(self, stages: list[int], stars: int, id: int):
         if not stages:
