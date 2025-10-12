@@ -294,6 +294,11 @@ class ZeroLegendsChapters:
         zero_legends_chapters = save_file.dojo_chapters
         zero_legends_chapters.edit_chapters(save_file, "G", True, base_index=37000)
 
+    @staticmethod
+    def edit_all_catclaw_championships(save_file: core.SaveFile):
+        zero_legends_chapters = save_file.dojo_chapters
+        zero_legends_chapters.edit_chapters_auto(save_file, "G", True, base_index=37000)
+
     def edit_chapters(
         self,
         save_file: core.SaveFile,
