@@ -227,7 +227,7 @@ class TalentData:
         talent_data_cat = self.get_cat_skill(cat.id)
         if talent_data_cat is None or cat.talents is None:
             return None
-        save_talent_data = cat.talents
+        # save_talent_data = cat.talents
         talent_names: list[str] = []
         max_levels: list[int] = []
         current_levels: list[int] = []
@@ -791,6 +791,18 @@ class StorageItem:
         self.item_type = 0
 
     @staticmethod
+    def from_cat(cat_id: int) -> StorageItem:
+        item = StorageItem(cat_id)
+        item.item_type = 1
+        return item
+
+    @staticmethod
+    def from_special_skill(special_skill_id: int) -> StorageItem:
+        item = StorageItem(special_skill_id)
+        item.item_type = 2
+        return item
+
+    @staticmethod
     def init() -> StorageItem:
         return StorageItem(0)
 
@@ -836,7 +848,6 @@ class Cats:
         self.unit_limit: UnitLimit | None = None
         self.nyanko_picture_book: NyankoPictureBook | None = None
         self.talent_data: TalentData | None = None
-        self.bulk_downloaded = False
 
     def get_all_cats(self) -> list[Cat]:
         return self.cats
@@ -882,7 +893,7 @@ class Cats:
 
     def get_non_gacha_cats(self, save_file: core.SaveFile) -> list[Cat]:
         unitbuy = self.read_unitbuy(save_file)
-        cats = []
+        cats: list[Cat] = []
         for cat in self.cats:
             unit_buy_data = unitbuy.get_unit_buy(cat.id)
             if unit_buy_data is None:
@@ -922,7 +933,6 @@ class Cats:
         save_file: core.SaveFile,
         search_name: str,
     ) -> list[Cat]:
-        self.bulk_download_names(save_file)
         cats: list[Cat] = []
         for cat in self.cats:
             names = cat.get_names_cls(save_file)
@@ -933,32 +943,6 @@ class Cats:
                     cats.append(cat)
                     break
         return cats
-
-    def bulk_download_names(
-        self, save_file: core.SaveFile, current_cats: list[core.Cat] | None = None
-    ):
-        if self.bulk_downloaded and current_cats is None:
-            return
-        file_names: list[str] = []
-        gdg = core.core_data.get_game_data_getter(save_file)
-        if current_cats is None:
-            cats = self.cats
-        else:
-            cats = current_cats
-        for cat in cats:
-            if cat.names is None:
-                file_name = f"Unit_Explanation{cat.id + 1}_{core.core_data.get_lang(save_file)}.csv"
-                if gdg.is_downloaded("resLocal", file_name):
-                    continue
-                file_names.append(file_name)
-
-        if len(file_names) > 50:
-            gdg.save_all_cat_names_fast()
-
-        core.core_data.get_game_data_getter(save_file).download_all(
-            "resLocal", file_names
-        )
-        self.bulk_downloaded = current_cats is None
 
     def get_cats_obtainable(self, save_file: core.SaveFile) -> list[Cat] | None:
         nyanko_picture_book = self.read_nyanko_picture_book(save_file)
