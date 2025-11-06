@@ -355,6 +355,7 @@ class SaveManagement:
         options = [
             "download_save",
             "select_save_file",
+            "complete_save",
             "load_from_documents",
             "adb_pull_save",
             "load_save_data_json",
@@ -367,12 +368,12 @@ class SaveManagement:
 
         use_waydroid = core.core_data.config.get_bool(ConfigKey.USE_WAYDROID)
         if use_waydroid:
-            options[3] = "waydroid_pull_save"
+            options[4] = "waydroid_pull_save"
 
         root_handler = io.root_handler.RootHandler()
 
         if root_handler.is_android():
-            options[3] = "root_storage_pull_save"
+            options[4] = "root_storage_pull_save"
 
         choice = dialog_creator.ChoiceInput(
             options, options, [], {}, "save_load_option", True
@@ -393,13 +394,19 @@ class SaveManagement:
             else:
                 save_path = None
         elif choice == 1:
-            save_path = main.Main.load_save_file()
+            uuid = dialog_creator.StringInput().get_input_locale_while("enter_uuid", {})
+            if uuid is None:
+                save_path = None
+            else:
+                save_path = main.Main.load_save_file(uuid)
         elif choice == 2:
+            save_path = main.Main.load_complete_save()
+        elif choice == 3:
             save_path = core.SaveFile.get_saves_path().add("SAVE_DATA")
             if not save_path.exists():
                 color.ColoredText.localize("save_file_not_found")
                 return None, False
-        elif choice == 3:
+        elif choice == 4:
             handler = root_handler
             if not root_handler.is_android():
                 if use_waydroid:
@@ -457,13 +464,13 @@ class SaveManagement:
                 )
             else:
                 used_storage = True
-        elif choice == 4:
+        elif choice == 5:
             data = main.Main.load_save_data_json()
             if data is not None:
                 save_path, cc = data
             else:
                 save_path = None
-        # elif choice == 5:
+        # elif choice == 6:
         #     color.ColoredText.localize("create_new_save_warning")
         #     cc = core.CountryCode.select()
         #     if cc is None:
@@ -484,11 +491,11 @@ class SaveManagement:
         #     save.to_file(save_path)
         #     color.ColoredText.localize("create_new_save_success")
 
-        elif choice == 5 and starting_options:
-            core.core_data.config.edit_config()
         elif choice == 6 and starting_options:
-            core.update_external_content()
+            core.core_data.config.edit_config()
         elif choice == 7 and starting_options:
+            core.update_external_content()
+        elif choice == 8 and starting_options:
             main.Main.exit_editor(check_temp=False)
 
         if save_path is None or not save_path.exists():

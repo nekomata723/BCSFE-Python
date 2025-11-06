@@ -3,6 +3,13 @@ from typing import Any
 from bcsfe import core
 from bcsfe.cli import color, dialog_creator, edits
 
+def get_total_stars(chapters: ChaptersType, map_id: int, stage_type: int | None = None) -> int:
+    if isinstance(chapters, core.EventChapters):
+        if stage_type is None:
+            raise ValueError("stage_type must be specified for EventChapters!")
+        return chapters.get_total_stars(stage_type, map_id)
+    else:
+        return chapters.get_total_stars(map_id)
 
 class EventStage:
     def __init__(self, clear_amount: int):
@@ -782,12 +789,24 @@ class EventChapters:
         EventChapters.edit_chapters(save_file, 0, "N")
 
     @staticmethod
+    def edit_all_sol_chapters(save_file: core.SaveFile):
+        EventChapters.edit_chapters_auto(save_file, 0, "N")
+
+    @staticmethod
     def edit_event_chapters(save_file: core.SaveFile):
         EventChapters.edit_chapters(save_file, 1, "S")
 
     @staticmethod
+    def edit_all_event_chapters(save_file: core.SaveFile):
+        EventChapters.edit_chapters_auto(save_file, 1, "S")
+
+    @staticmethod
     def edit_collab_chapters(save_file: core.SaveFile):
         EventChapters.edit_chapters(save_file, 2, "C")
+
+    @staticmethod
+    def edit_all_collab_chapters(save_file: core.SaveFile):
+        EventChapters.edit_chapters_auto(save_file, 2, "C")
 
     @staticmethod
     def select_map_names(names_dict: dict[int, str | None]) -> list[int] | None:
@@ -884,6 +903,10 @@ class EventChapters:
     @staticmethod
     def edit_chapters(save_file: core.SaveFile, type: int, letter_code: str):
         edits.map.edit_chapters(save_file, save_file.event_stages, letter_code, type)
+
+    @staticmethod
+    def edit_chapters_auto(save_file: core.SaveFile, type: int, letter_code: str):
+        edits.map.edit_chapters_auto(save_file, save_file.event_stages, letter_code, type)
 
     def unclear_rest(
         self,

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Any
 from bcsfe import core
-from bcsfe.cli import dialog_creator
+from bcsfe.cli import dialog_creator, color
 
 
 class EquipSlot:
@@ -198,3 +198,13 @@ class LineUps:
             localized_item=True,
             remove_alias=True,
         ).edit()
+
+    def edit_unlocked_slotsα(self):
+        self.unlocked_slots = self.slot_names_length
+        print()
+        color.ColoredText.localize(
+            "value_changed",
+            name="編成スロット",
+            value=self.slot_names_length,
+            escape=True
+        )
