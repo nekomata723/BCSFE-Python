@@ -2,7 +2,6 @@ from __future__ import annotations
 import glob
 import os
 import shutil
-import typing
 
 from bcsfe import core
 import re
@@ -88,12 +87,17 @@ class Path:
         path.generate_dirs()
         return path
 
+    def is_empty(self) -> bool:
+        return self.path == ""
+
     def generate_dirs(self: Path) -> Path:
+        if self.is_empty():
+            return self
         if not self.exists():
             try:
                 self.__make_dirs()
-            except OSError:
-                pass
+            except OSError as e:
+                print(e, self)
         return self
 
     def create(self) -> Path:
