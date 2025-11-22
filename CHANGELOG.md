@@ -1,8 +1,10 @@
 # Changelog
 
-## [3.2.0] - ???
+## [3.2.0] - 2025-11-21
 
 ### Added
+
+- Feature to edit the cat storage
 
 - Feature to reset the golden cat cpu uses
 
@@ -15,6 +17,8 @@
 - Cats of the Cosmos Chapter 3 outbreaks
 
 - Features to push to root storage and rerun game
+
+- Option to select cats by the game version they were released in
 
 ### Fixed
 
