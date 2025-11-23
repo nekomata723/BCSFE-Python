@@ -89,7 +89,7 @@ class Path:
 
     def is_empty(self) -> bool:
         return self.path == ""
-        
+
     def generate_dirs(self: Path) -> Path:
         if self.is_empty():
             return self
