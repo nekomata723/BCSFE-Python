@@ -248,6 +248,8 @@ class BasicItems:
             core.core_data.max_value_manager.get("platinum_tickets")
             - platinum_ticket_amount
         ) * 10 + 9
+
+        max_value = max(0, max_value)
         save_file.platinum_shards = dialog_creator.SingleEditor(
             BasicItems.get_name(name, "platinum_shards"),
             save_file.platinum_shards,
@@ -303,6 +305,10 @@ class BasicItems:
     @staticmethod
     def edit_battle_itemsα(save_file: core.SaveFile):
         save_file.battle_items.editα(save_file)
+
+    @staticmethod
+    def edit_battle_items_endless(save_file: core.SaveFile):
+        save_file.battle_items.edit_endless_items(save_file)
 
     @staticmethod
     def edit_catamins(save_file: core.SaveFile):
@@ -406,7 +412,7 @@ class BasicItems:
         if items is None:
             return
         names: list[str] = []
-        for item in items:
+        for item in items[: len(save_file.treasure_chests)]:
             name = names_o.get_name(item.id)
             if name is None:
                 name = core.core_data.local_manager.get_key(
