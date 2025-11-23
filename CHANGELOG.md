@@ -1,5 +1,6 @@
 # Changelog
 
+<<<<<<< HEAD
 ## [3.2.1] - 2025-11-23
 
 ### Added
@@ -18,6 +19,12 @@
 
 ### Added
 
+=======
+## [3.2.0] - 2025-11-21
+
+### Added
+
+>>>>>>> origin/master
 - Feature to edit the cat storage
 
 - Feature to reset the golden cat cpu uses
