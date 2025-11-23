@@ -1,9 +1,30 @@
 # Changelog
 
+<<<<<<< HEAD
+## [3.2.1] - 2025-11-23
+
+### Added
+
+- Feature to add endless battle items
+
+### Fixed
+
+- Fixed game data downloading when upgrading from a previous editor version
+
+- Fixed disable max values not working in some situations
+
+- Fixed an issue where maps not present in the save file could be selected, causing an error
+
 ## [3.2.0] - 2025-11-21
 
 ### Added
 
+=======
+## [3.2.0] - 2025-11-21
+
+### Added
+
+>>>>>>> origin/master
 - Feature to edit the cat storage
 
 - Feature to reset the golden cat cpu uses
