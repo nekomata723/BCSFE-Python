@@ -50,7 +50,7 @@ class UncannyChapters:
     @staticmethod
     def edit_all_uncanny(save_file: core.SaveFile):
         uncanny = save_file.uncanny
-        uncanny.chapters.edit_chapters_auto(save_file, "NA")
+        uncanny.chapters.edit_chapters_auto(save_file, "NA", 13000)
 
     @staticmethod
     def edit_catamin_stages(save_file: core.SaveFile):
