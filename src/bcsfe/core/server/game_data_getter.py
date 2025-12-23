@@ -301,6 +301,8 @@ class GameDataGetter:
             for version in GameDataGetter.get_game_data_dir().add(cc).get_dirs():
                 if not version.exists():
                     continue
+                if not version.add("downloaded").exists():
+                    continue
                 if cc in versions:
                     versions[cc].append(version.basename())
                 else:
@@ -328,4 +330,5 @@ class GameDataGetter:
                 pack_name=packname,
                 country_code=self.cc.get_code(),
                 version=self.version,
+                url=self.url,
             )
