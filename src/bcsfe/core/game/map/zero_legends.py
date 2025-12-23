@@ -282,7 +282,7 @@ class ZeroLegendsChapters:
     @staticmethod
     def edit_all_zero_legends(save_file: core.SaveFile):
         zero_legends_chapters = save_file.zero_legends
-        zero_legends_chapters.edit_chapters_auto(save_file, "ND")
+        zero_legends_chapters.edit_chapters_auto(save_file, "ND", base_index=34000)
 
     @staticmethod
     def edit_chapters(self, save_file: core.SaveFile, letter_code: str):
