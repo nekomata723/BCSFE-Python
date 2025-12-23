@@ -733,6 +733,8 @@ class EventChapters:
     def ask_stars(
         max_stars: int, prompt: str = "custom_star_count_per_chapter"
     ) -> int | None:
+        if max_stars <= 1:
+            return max_stars
         stars = dialog_creator.IntInput(min=0, max=max_stars).get_basic_input_locale(
             prompt, {"max": max_stars}
         )
@@ -786,7 +788,7 @@ class EventChapters:
 
     @staticmethod
     def edit_sol_chapters(save_file: core.SaveFile):
-        EventChapters.edit_chapters(save_file, 0, "N")
+        EventChapters.edit_chapters(save_file, 0, "N", 0)
 
     @staticmethod
     def edit_all_sol_chapters(save_file: core.SaveFile):
@@ -794,7 +796,7 @@ class EventChapters:
 
     @staticmethod
     def edit_event_chapters(save_file: core.SaveFile):
-        EventChapters.edit_chapters(save_file, 1, "S")
+        EventChapters.edit_chapters(save_file, 1, "S", 1000)
 
     @staticmethod
     def edit_all_event_chapters(save_file: core.SaveFile):
@@ -802,7 +804,7 @@ class EventChapters:
 
     @staticmethod
     def edit_collab_chapters(save_file: core.SaveFile):
-        EventChapters.edit_chapters(save_file, 2, "C")
+        EventChapters.edit_chapters(save_file, 2, "C", 2000)
 
     @staticmethod
     def edit_all_collab_chapters(save_file: core.SaveFile):
@@ -901,8 +903,16 @@ class EventChapters:
         color.ColoredText.localize("current_sol_chapter", name=name, id=id)
 
     @staticmethod
-    def edit_chapters(save_file: core.SaveFile, type: int, letter_code: str):
-        edits.map.edit_chapters(save_file, save_file.event_stages, letter_code, type)
+    def edit_chapters(
+        save_file: core.SaveFile, type: int, letter_code: str, base_index: int
+    ):
+        edits.map.edit_chapters(
+            save_file,
+            save_file.event_stages,
+            letter_code,
+            type=type,
+            base_index=base_index,
+        )
 
     @staticmethod
     def edit_chapters_auto(save_file: core.SaveFile, type: int, letter_code: str):

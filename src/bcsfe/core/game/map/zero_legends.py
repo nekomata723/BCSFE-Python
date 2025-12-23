@@ -277,7 +277,7 @@ class ZeroLegendsChapters:
     def edit_zero_legends(save_file: core.SaveFile):
         color.ColoredText.localize("zero_legends_warning")
         zero_legends_chapters = save_file.zero_legends
-        zero_legends_chapters.edit_chapters(save_file, "ND")
+        zero_legends_chapters.edit_chapters(save_file, "ND", base_index=34000)
 
     @staticmethod
     def edit_all_zero_legends(save_file: core.SaveFile):
@@ -292,7 +292,7 @@ class ZeroLegendsChapters:
     @staticmethod
     def edit_catclaw_championships(save_file: core.SaveFile):
         zero_legends_chapters = save_file.dojo_chapters
-        zero_legends_chapters.edit_chapters(save_file, "G", True, base_index=37000)
+        zero_legends_chapters.edit_chapters(save_file, "G", 37000, True)
 
     @staticmethod
     def edit_all_catclaw_championships(save_file: core.SaveFile):
@@ -303,8 +303,8 @@ class ZeroLegendsChapters:
         self,
         save_file: core.SaveFile,
         letter_code: str,
+        base_index: int,
         no_r_prefix: bool = False,
-        base_index: int | None = None,
     ):
         edits.map.edit_chapters(
             save_file, self, letter_code, no_r_prefix=no_r_prefix, base_index=base_index
