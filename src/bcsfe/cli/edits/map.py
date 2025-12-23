@@ -332,23 +332,23 @@ def edit_chapters_auto(
     letter_code: str,
     type: int | None = None,
     no_r_prefix: bool = False,
-    base_index: int | None = None,
+    base_index: int = 0,
 ):
-    map_names = core.MapNames(save_file, letter_code, no_r_prefix=no_r_prefix, base_index=base_index)
-    names = map_names.map_names
-    map_choices = list(names.keys())
-    clear = True
-    clear_txt = "clear"
-    star_prompt = "custom_star_count_per_chapter"
-    clear_type_choice = 0
-    stars_type_choice = False
-    modify_clear_amounts = False
-    clear_amount = 1
-    clear_amount_type = -1
-    for id in map_choices:
-        map_name = names[id]
-        stage_names = map_names.stage_names.get(id) or []
-        stage_names = [sn for sn in stage_names if sn and sn != "＠"]
+    map_names = core.MapNames(
+        save_file,
+        letter_code,
+        no_r_prefix=no_r_prefix,
+        base_index=base_index,
+    )
+    map_option = core.MapOption.from_save(save_file)
+    if map_option is None:
+        return
+    for id, map_name in map_names.map_names.items():
+        stage_names = [
+            sn
+            for sn in (map_names.stage_names.get(id) or [])
+            if sn and sn != "＠"
+        ]
         total_stages = len(stage_names)
         if isinstance(chapters, core.EventChapters):
             if type is None:
@@ -356,22 +356,28 @@ def edit_chapters_auto(
             chapters.set_total_stages(id, type, total_stages)
         else:
             chapters.set_total_stages(id, total_stages)
-        color.ColoredText.localize("current_sol_chapter", name=map_name, id=id)
-        stars = get_total_stars(chapters, id, type)
-        if stars == 0:
-            stars = 3
+
+        color.ColoredText.localize(
+            "current_sol_chapter", name=map_name, id=id
+        )
+        stars = get_total_stars(
+            map_option,
+            base_index,
+            chapters,
+            id,
+            type,
+        )
         stages = list(range(total_stages))
-        start = 0
-        end = stars
-        for star in range(start, end):
+        unclear_rest(chapters, stages, stars, id, type)
+        for star in range(stars):
             for stage in stages:
                 clear_stage(
                     chapters,
                     id,
                     star,
                     stage,
+                    clear_amount=1,
                     overwrite_clear_progress=True,
-                    clear_amount=clear_amount,
                     type=type,
                 )
     color.ColoredText.localize("map_chapters_edited")
