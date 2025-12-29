@@ -586,7 +586,7 @@ def edit_chapters_auto(
         )
         stages = list(range(total_stages))
 
-        unclear_rest(chapters, stages, stars, id, type)
+        unclear_rest(chapters, stages, max(stars - 1, 0), id, type)
         for star in range(stars):
             for stage in stages:
                 clear_stage(
