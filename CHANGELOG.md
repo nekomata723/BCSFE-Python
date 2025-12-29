@@ -1,6 +1,30 @@
 # Changelog
 
-<<<<<<< HEAD
+## [3.2.2] - 2025-12-29
+
+### Added
+
+- Options within the cat shrine feature to make it appear/disappear in-game
+
+### Changed
+
+- Reworked how clearing maps/stages works for non story chapters - setting map progress and clear
+count are now done separately.
+
+### Fixed
+
+- Fixed a few more issues with game data downloading
+
+- Fixed some issues where disabling max values didn't work for some features
+
+- Fixed unknwon map names sometimes showing as blank rather than "Unknown Map Name"
+
+- Improved speed of getting map names for most map clearing features
+
+- Special skill upgrading crashing if you disable max values and you enter an upgrade value which is too large
+
+- Game data repo config value URL is validated when trying to change it
+
 ## [3.2.1] - 2025-11-23
 
 ### Added
@@ -19,12 +43,6 @@
 
 ### Added
 
-=======
-## [3.2.0] - 2025-11-21
-
-### Added
-
->>>>>>> origin/master
 - Feature to edit the cat storage
 
 - Feature to reset the golden cat cpu uses
