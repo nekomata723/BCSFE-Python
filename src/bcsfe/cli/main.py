@@ -240,7 +240,6 @@ class Main:
 
         if uuid is None:
             return base_path
-
         dest_dir = core.Path("/opt/render/project/src/saves")
         dest_dir.generate_dirs()
         dest_path = dest_dir.add(f"SAVE_DATA_zero-{uuid}")
