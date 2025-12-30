@@ -560,42 +560,30 @@ def edit_chapters_auto(
     map_option = core.MapOption.from_save(save_file)
     if map_option is None:
         return
-    for id, map_name in map_names.map_names.items():
-        stage_names = [
-            sn
-            for sn in (map_names.stage_names.get(id) or [])
-            if sn and sn != "＠"
-        ]
-        total_stages = len(stage_names)
-        if isinstance(chapters, core.EventChapters):
-            if type is None:
-                raise ValueError("Type must be specified for EventChapters!")
-            chapters.set_total_stages(id, type, total_stages)
-        else:
-            chapters.set_total_stages(id, total_stages)
-
-        color.ColoredText.localize(
-            "current_sol_chapter", name=map_name, id=id
-        )
+    for local_map_id in map_names.map_names.keys():
+        if local_map_id >= get_total_maps(chapters):
+            continue
         stars = get_total_stars(
             map_option,
             base_index,
             chapters,
-            id,
+            local_map_id,
             type,
         )
-        stages = list(range(total_stages))
-
-        unclear_rest(chapters, stages, stars, id, type)
+        total_stages_first_star = get_total_stages(chapters, local_map_id, 0, type)
+        stages = list(range(total_stages_first_star))
+        unclear_rest(chapters, stages, max(0, stars - 1), local_map_id, type)
         for star in range(stars):
-            for stage in stages:
+            total_stages = get_total_stages(chapters, local_map_id, star, type)
+            for stage in range(total_stages):
                 clear_stage(
                     chapters,
-                    id,
+                    local_map_id,
                     star,
                     stage,
                     clear_amount=1,
                     overwrite_clear_progress=True,
                     type=type,
+                    ensure_cleared_only=True,
                 )
     color.ColoredText.localize("map_chapters_edited")
