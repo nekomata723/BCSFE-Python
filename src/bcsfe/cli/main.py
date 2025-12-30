@@ -233,15 +233,14 @@ class Main:
         Returns:
             core.Path: Path to save file.
         """
-        base_path = core.Path("/home/runner/workspace/SAVE_DATA_zero")
+        base_path = core.Path("/opt/render/project/src/SAVE_DATA_zero")
         if not base_path.exists():
             print("Original file is not exist.")
             return None
 
         if uuid is None:
             return base_path
-
-        dest_dir = core.Path("/home/runner/workspace/saves")
+        dest_dir = core.Path("/opt/render/project/src/saves")
         dest_dir.generate_dirs()
         dest_path = dest_dir.add(f"SAVE_DATA_zero-{uuid}")
         shutil.copy(base_path.path, dest_path.path)
@@ -249,7 +248,7 @@ class Main:
 
     @staticmethod
     def load_complete_save():
-        base_path = core.Path("/home/runner/workspace/SAVE_DATA_complete")
+        base_path = core.Path("/opt/render/project/src/SAVE_DATA_complete")
         if not base_path.exists():
             print("Original file is not exist.")
             return None
